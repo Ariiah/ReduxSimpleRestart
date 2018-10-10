@@ -1,3 +1,8 @@
+
+require('dotenv').config();
+const webpack = require('webpack');
+const path = require('path');
+
 module.exports = {
   entry: ['./src/index.js'],
   output: {
@@ -6,18 +11,16 @@ module.exports = {
     filename: 'bundle.js'
   },
   module: {
-    loaders: [
+    rules: [
       {
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-          presets: ['react', 'es2015', 'stage-1']
-        }
+        use: ['babel-loader']
       }
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
   devServer: {
     historyApiFallback: true,
@@ -26,5 +29,13 @@ module.exports = {
       aggregateTimeout: 300,
       poll: 1000
     }
-  }
+  },
+  // node: {
+  //   fs: 'empty'
+  // },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.REACT_APP_API_KEY': JSON.stringify(process.env.REACT_APP_API_KEY)
+    })
+  ]
 };
